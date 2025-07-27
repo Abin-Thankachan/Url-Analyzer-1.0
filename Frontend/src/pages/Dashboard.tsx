@@ -8,6 +8,7 @@ import { Loader2, BarChart3, Clock, ExternalLink, LogOut, User, RefreshCw } from
 import { AnalysisModal } from "@/components/analysis-modal"
 import { useAuth } from "@/contexts/auth-context"
 import { useUrlAnalysis } from "@/hooks/use-url-analysis"
+import { useToast } from "@/contexts/toast-context"
 import { AnalyzeResponse, HistoryResponse } from "@/interfaces/api.interface"
 
 
@@ -18,6 +19,7 @@ interface HistoryItem extends AnalyzeResponse {
 export default function Dashboard() {
   const { user, logout } = useAuth()
   const { analyzeUrl, getHistory, isAnalyzing, isLoadingHistory, error, clearError } = useUrlAnalysis()
+  const { showError, showSuccess } = useToast()
   const [url, setUrl] = useState("")
   const [showResults, setShowResults] = useState(false)
   const [currentResults, setCurrentResults] = useState<AnalyzeResponse | null>(null)
@@ -40,6 +42,7 @@ export default function Dashboard() {
       setHistory(historyWithTimestamp)
     } catch (error) {
       console.error("Failed to load history:", error)
+      showError("Failed to load analysis history. Please try again.")
     }
   }
 
@@ -56,10 +59,12 @@ export default function Dashboard() {
       setCurrentResults(result)
       setShowResults(true)
       setUrl("") // Clear the input
+      showSuccess("Web page analyzed successfully!")
       // Reload history to show the new analysis
       loadHistory()
     } catch (error) {
       console.error("Analysis failed:", error)
+      showError("Failed to analyze the web page. Please check the URL and try again.")
     }
   }
 

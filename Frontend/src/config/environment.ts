@@ -3,7 +3,7 @@
  * This file is auto-generated. Do not edit manually.
  * Run 'npm run gen:env' to regenerate.
  * 
- * Generated on: 2025-07-27T15:41:48.029Z
+ * Generated on: 2025-07-27T17:06:46.654Z
  */
 
 export interface Environment {

@@ -7,6 +7,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Alert, AlertDescription } from "@/components/ui/alert"
 import { Loader2, BarChart3 } from "lucide-react"
 import { useAuth } from "@/contexts/auth-context"
+import { useToast } from "@/contexts/toast-context"
 
 export default function SignIn() {
   const [username, setUsername] = useState("")
@@ -14,6 +15,7 @@ export default function SignIn() {
   const navigate = useNavigate()
   const location = useLocation()
   const { login, isLoading, error, clearError, isAuthenticated } = useAuth()
+  const { showError } = useToast()
 
   const searchParams = new URLSearchParams(location.search)
   const successMessage = searchParams.get("message")
@@ -51,7 +53,8 @@ export default function SignIn() {
       await login({ username, password })
       // Navigation will be handled by the useEffect when isAuthenticated changes
     } catch (error) {
-      // Error is handled by the auth context
+      // Show toast notification for API failures
+      showError("Failed to sign in. Please check your credentials and try again.")
     }
   }
 

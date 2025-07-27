@@ -7,6 +7,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Alert, AlertDescription } from "@/components/ui/alert"
 import { Loader2, BarChart3, Check } from "lucide-react"
 import { useAuth } from "@/contexts/auth-context"
+import { useToast } from "@/contexts/toast-context"
 
 export default function SignUp() {
   const [username, setUsername] = useState("")
@@ -16,6 +17,7 @@ export default function SignUp() {
   const [localError, setLocalError] = useState("")
   const navigate = useNavigate()
   const { register, isLoading, error, clearError, isAuthenticated } = useAuth()
+  const { showError, showSuccess } = useToast()
 
   useEffect(() => {
     // Only redirect if already authenticated when component loads
@@ -51,13 +53,15 @@ export default function SignUp() {
 
     try {
       await register({ username, email, password })
-      // Registration successful, redirect to login with username prefilled
+      // Registration successful, show success toast and redirect to login with username prefilled
+      showSuccess("Account created successfully! Please sign in with your new credentials.")
       navigate("/signin", { 
         replace: true, 
         state: { prefillUsername: username } 
       })
     } catch (error) {
-      // Error is handled by the auth context
+      // Show toast notification for API failures
+      showError("Failed to create account. Please try again.")
     }
   }
 
